@@ -1,2 +1,7 @@
+*.db
 venv/
 .env
+.pytest_cache/
+.idea/
+.vscode/
+__pycache__/
