@@ -1,10 +1,11 @@
+"""mailer mdule tests"""
 from unittest.mock import patch
 from .mailer import Mailer
-import dotenv
 
 
 @patch('smtplib.SMTP_SSL')
 def test_send_mail(mock_smtp):
+    """test sending emails"""
     smtp_server = 'server'
     smtp_port = 123
     mail_from = 'from@test.com'
