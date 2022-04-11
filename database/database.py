@@ -30,7 +30,6 @@ class Database:
 
         self.cursor.execute(sql, bindings)
         rows = self.cursor.fetchall()
-        print(rows)
         return [self._to_named_tuple(row) for row in rows]
 
     def get_row(self, sql: str, bindings: Tuple) -> NamedTuple:
