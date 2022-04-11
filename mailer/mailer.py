@@ -16,12 +16,32 @@ class Mailer:
         self.smtp_port = smtp_port
         self.username = username
         self.password = password
-        self.kwargs = {}
-        self.smtp = smtplib.SMTP
+        self.use_ssl = use_ssl
+        self.server = None
 
-        if use_ssl:
-            self.smtp = smtplib.SMTP_SSL
-            self.kwargs['context'] = ssl.create_default_context()
+    def __enter__(self):
+        if self.use_ssl:
+            smtp = smtplib.SMTP_SSL
+            smtp_kwargs = {'context': ssl.create_default_context()} 
+        else:
+            smtp = smtplib.SMTP
+            smtp_kwargs = {}
+
+        self.server = smtp(
+            self.smtp_server,
+            self.smtp_port,
+            **smtp_kwargs
+        )
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb):
+        self.server.close()
+
+    def send(self, mail_from: str, mail_to: str, subject: str, message: str) -> None:
+        """send email method"""
+        message_to_send = self._preper_message(subject, mail_to, mail_from, message)        
+        self.server.login(self.username, self.password)
+        self.server.sendmail(mail_from, mail_to, message_to_send)
 
     @staticmethod
     def _preper_message(subject, mail_to, mail_from, message):
@@ -31,18 +51,3 @@ To: {mail_to}
 From: {mail_from}
 
 {message}"""
-            
-
-    def send(self, mail_from: str, mail_to: str, subject: str, message: str) -> None:
-        """send email method"""
-
-        message_to_send = self._preper_message(subject, mail_to, mail_from, message)        
-
-        with self.smtp(
-            self.smtp_server,
-            self.smtp_port,
-            **self.kwargs
-        ) as server:
-
-            server.login(self.username, self.password)
-            server.sendmail(mail_from, mail_to, message_to_send)
