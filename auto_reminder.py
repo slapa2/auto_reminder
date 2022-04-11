@@ -18,18 +18,17 @@ PASSWORD = os.getenv('PASSWORD')
 USE_SSL = bool(int(os.getenv('USE_SSL')))
 
 connection = sqlite3.connect(DB_PATH)
-mailer = Mailer(SMTP_SERVER, SMTP_PORT, USERNAME, PASSWORD, USE_SSL)
-
 with Database(connection) as database:
     today_remindes = database.get_all_rows(
         'select * from items where return_at = ?',
         [datetime.datetime.now().strftime('%Y-%m-%d')]
     )
 
-for remind in today_remindes:
-    mailer.send(
-        mail_from=EMAIL,
-        mail_to=remind.email,
-        subject=f'przypomnienie o zrocie {remind.item_name}',
-        message=f'Hej {remind.name}, najwyzsza pora zebys oddal/a mi {remind.item_name}!'
-    )
+with Mailer(SMTP_SERVER, SMTP_PORT, USERNAME, PASSWORD, USE_SSL) as mailer:
+    for remind in today_remindes:
+        mailer.send(
+            mail_from=EMAIL,
+            mail_to=remind.email,
+            subject=f'przypomnienie o zrocie {remind.item_name}',
+            message=f'Hej {remind.name}, najwyzsza pora zebys oddal/a mi {remind.item_name}!'
+        )
