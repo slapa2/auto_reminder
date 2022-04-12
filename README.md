@@ -20,9 +20,9 @@ if you wont add som dummy data to your database run:
 python3 database_add_fixtures.py
 ```
 
-Finaly to send emails with remind run:
+Finaly to send emails with reminds run:
 ```
 python3 auto_reminder.py
 ```
 
-if you wont regulary send emails with reminds you can add tis script to your crontab
+if you want regulary send emails with reminds you can add tis script to your crontab
