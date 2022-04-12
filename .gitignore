@@ -1,8 +1,9 @@
 *.db
 venv/
-.env
+*.env
 .pytest_cache/
 .idea/
 .vscode/
 __pycache__/
 *.pyc
+.DS_STORE
