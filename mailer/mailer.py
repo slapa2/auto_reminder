@@ -44,10 +44,10 @@ class Mailer:
         self.server.sendmail(mail_from, mail_to, message_to_send)
 
     @staticmethod
-    def _preper_message(subject, mail_to, mail_from, message):
+    def _preper_message(subject: str, mail_to: str, mail_from: str, message: str) -> bytes:
         return  f"""\
 Subject: {subject}
 To: {mail_to}
 From: {mail_from}
 
-{message}"""
+{message}""".encode('utf-8')
