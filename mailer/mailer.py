@@ -22,7 +22,7 @@ class Mailer:
     def __enter__(self):
         if self.use_ssl:
             smtp = smtplib.SMTP_SSL
-            smtp_kwargs = {'context': ssl.create_default_context()} 
+            smtp_kwargs = {'context': ssl.create_default_context()}
         else:
             smtp = smtplib.SMTP
             smtp_kwargs = {}
