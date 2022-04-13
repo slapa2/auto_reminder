@@ -4,19 +4,64 @@ from .mailer import Mailer
 
 
 @patch('smtplib.SMTP_SSL')
-def test_send_mail(mock_smtp):
-    """test sending emails"""
+@patch('ssl.create_default_context')
+def test_send_mail(mock_ssl, mock_smtp):
+    """test sending emails with ssl"""
+
+    # GIVEN
     smtp_server = 'server'
     smtp_port = 123
     mail_from = 'from@test.com'
     password = 'password'
     mail_to = 'address@email.com'
-    message = 'test message'
+    subject = 'test subject'
+    use_ssl = True
+    message = 'test ,essage'
 
-    mailer = Mailer(smtp_server, smtp_port, mail_from, password)
-    mailer.send(mail_to, message)
-    mock_smtp.assert_called()
-    context = mock_smtp.return_value.__enter__.return_value
-    context.sendmail.assert_called_with(
-        mail_from, mail_to, message
-    )
+    message_to_send = f"""\
+Subject: {subject}
+To: {mail_to}
+From: {mail_from}
+
+{message}""".encode('utf-8')
+
+    # WHEN
+    with Mailer(smtp_server, smtp_port, mail_from, password, use_ssl) as mailer:
+        mailer.send(mail_from, mail_to, subject, message)
+
+    # THEN
+    ssl_context = mock_ssl.return_value
+    server = mock_smtp.return_value
+    mock_smtp.assert_called_with(smtp_server, smtp_port, context=ssl_context)
+    server.sendmail.assert_called_with(mail_from, mail_to, message_to_send)
+
+
+@patch('smtplib.SMTP')
+def test_send_mail_no_ssl(mock_smtp):
+    """test sending emails without ssl"""
+
+    # GIVEN
+    smtp_server = 'server'
+    smtp_port = 123
+    mail_from = 'from@test.com'
+    password = 'password'
+    mail_to = 'address@email.com'
+    subject = 'test subject'
+    use_ssl = False
+    message = 'test ,essage'
+
+    message_to_send = f"""\
+Subject: {subject}
+To: {mail_to}
+From: {mail_from}
+
+{message}""".encode('utf-8')
+
+    # WHEN
+    with Mailer(smtp_server, smtp_port, mail_from, password, use_ssl) as mailer:
+        mailer.send(mail_from, mail_to, subject, message)
+
+    # THEN
+    server = mock_smtp.return_value
+    mock_smtp.assert_called_with(smtp_server, smtp_port)
+    server.sendmail.assert_called_with(mail_from, mail_to, message_to_send)
