@@ -2,6 +2,7 @@
 This module provides basic mailer service that allows you to send emails 
 """
 
+import email
 import smtplib
 import ssl
 
@@ -39,15 +40,16 @@ class Mailer:
 
     def send(self, mail_from: str, mail_to: str, subject: str, message: str) -> None:
         """send email method"""
-        message_to_send = self._preper_message(subject, mail_to, mail_from, message)        
+        message_to_send = self._preper_message(mail_from, mail_to, subject, message)
         self.server.login(self.username, self.password)
         self.server.sendmail(mail_from, mail_to, message_to_send)
 
     @staticmethod
-    def _preper_message(subject: str, mail_to: str, mail_from: str, message: str) -> bytes:
-        return  f"""\
-Subject: {subject}
-To: {mail_to}
-From: {mail_from}
+    def _preper_message(mail_from: str, mail_to: str,subject: str, message: str) -> str:
+        prepeared_message = email.message_from_string(message)
+        prepeared_message.set_charset('utf-8')
+        prepeared_message['Subject'] = subject
+        prepeared_message['From'] = mail_from
+        prepeared_message['To'] = mail_to
+        return prepeared_message.as_string()
 
-{message}""".encode('utf-8')

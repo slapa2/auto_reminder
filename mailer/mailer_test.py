@@ -1,4 +1,5 @@
 """mailer mdule tests"""
+import email
 from unittest.mock import patch
 from .mailer import Mailer
 
@@ -18,12 +19,12 @@ def test_send_mail(mock_ssl, mock_smtp):
     use_ssl = True
     message = 'test ,essage'
 
-    message_to_send = f"""\
-Subject: {subject}
-To: {mail_to}
-From: {mail_from}
-
-{message}""".encode('utf-8')
+    message_to_send = email.message_from_string(message)
+    message_to_send.set_charset('utf-8')
+    message_to_send['Subject'] = subject
+    message_to_send['From'] = mail_from
+    message_to_send['To'] = mail_to
+    message_to_send = message_to_send.as_string()
 
     # WHEN
     with Mailer(smtp_server, smtp_port, mail_from, password, use_ssl) as mailer:
@@ -50,12 +51,12 @@ def test_send_mail_no_ssl(mock_smtp):
     use_ssl = False
     message = 'test ,essage'
 
-    message_to_send = f"""\
-Subject: {subject}
-To: {mail_to}
-From: {mail_from}
-
-{message}""".encode('utf-8')
+    message_to_send = email.message_from_string(message)
+    message_to_send.set_charset('utf-8')
+    message_to_send['Subject'] = subject
+    message_to_send['From'] = mail_from
+    message_to_send['To'] = mail_to
+    message_to_send = message_to_send.as_string()
 
     # WHEN
     with Mailer(smtp_server, smtp_port, mail_from, password, use_ssl) as mailer:
