@@ -1,4 +1,5 @@
 *.db
+*.sqlite
 venv/
 *.env
 .pytest_cache/
