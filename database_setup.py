@@ -6,7 +6,7 @@ from database.database import Database
 
 def main ():
     """creating database and table items"""
-    DB_NAME = 'auto-reminder.db'
+    DB_NAME = 'auto-reminder.sqlite'
     db_connection = sqlite3.connect(DB_NAME)
 
     create_items_table_sql = """CREATE TABLE items (
