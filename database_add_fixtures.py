@@ -2,7 +2,7 @@
 
 import datetime
 import sqlite3
-from database.database import Database
+from modules.database import Database
 
 
 def main():

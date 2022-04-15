@@ -1,7 +1,7 @@
 """mailer mdule tests"""
 import email
 from unittest.mock import patch
-from .mailer import Mailer
+from modules.mailer import Mailer
 
 
 @patch('smtplib.SMTP_SSL')

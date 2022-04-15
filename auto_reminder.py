@@ -5,8 +5,8 @@ import os
 import datetime
 import sqlite3
 import dotenv
-from database.database import Database
-from mailer.mailer import Mailer
+from modules.database import Database
+from modules.mailer import Mailer
 
 
 DB_NAME = 'auto-reminder.sqlite'

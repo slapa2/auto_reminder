@@ -1,8 +1,7 @@
 import sqlite3
 from datetime import datetime
-from collections import namedtuple
 import pytest
-from .database import Database
+from modules.database import Database
 
 
 @pytest.fixture
@@ -58,6 +57,3 @@ def test_get_one_row(create_connection_and_db):
     assert data.email == 'jan@mail.pl'
     assert data.item_name == 'item 1'
     assert data.return_at == today
-    
-    
-    
