@@ -26,3 +26,6 @@ python3 auto_reminder.py
 ```
 
 if you want regulary send emails with reminds you can add tis script to your crontab
+
+---
+project inspired by [pycamp.pl](https://www.pycamp.pl/)
